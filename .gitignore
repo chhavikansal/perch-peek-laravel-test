@@ -12,6 +12,5 @@ npm-debug.log
 /_ide_helper_models.php
 /.phpstorm.meta.php
 Vagrantfile
-.env.testing
 /composer.phar
-
+nohup.out

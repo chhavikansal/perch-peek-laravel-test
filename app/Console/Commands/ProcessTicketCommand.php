@@ -3,7 +3,9 @@
 namespace App\Console\Commands;
 
 use App\Models\Tickets;
+use App\Repositories\TicketsRepository;
 use Illuminate\Console\Command;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class ProcessTicketCommand extends Command
 {
@@ -20,15 +22,20 @@ class ProcessTicketCommand extends Command
      * @var string
      */
     protected $description = 'This command processes a ticket in every 5 minutes';
+    /**
+     * @var TicketsRepository
+     */
+    private $ticketsRepository;
 
     /**
      * Create a new command instance.
      *
      * @return void
      */
-    public function __construct()
+    public function __construct(TicketsRepository $ticketsRepository)
     {
         parent::__construct();
+        $this->ticketsRepository = $ticketsRepository;
     }
 
     /**
@@ -38,18 +45,21 @@ class ProcessTicketCommand extends Command
      */
     public function handle()
     {
-        $ticket = Tickets::where('status', 0)
-                            ->orderBy('created_at', 'asc')
-                            ->first();
-
-        if ($ticket == null) {
-            $this->info('No un-processed ticket has been found');
+        try {
+            $ticket = $this->ticketsRepository->getUnprocessedTicket();
+        } catch (ModelNotFoundException $e) {
+            $this->error($e->getMessage());
             return;
         }
 
-        Tickets::where('id', $ticket->id)
-            ->update(['status' => 1]);
+        if ($ticket === null) {
+            $this->info('No un-processed ticket has been found');
+        } else {
+            $data = ["status" => 1];
 
-        $this->info('Ticket has been processed successfully');
+            $this->ticketsRepository->update($data, $ticket->id);
+            $this->info('Ticket has been processed successfully');
+        }
+        return;
     }
 }

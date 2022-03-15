@@ -16,6 +16,6 @@ class DummyDataSeeder extends Seeder
      */
     public function run(int $count=100)
     {
-        Tickets::factory($count)->create();
+        Tickets::factory()->times($count)->create();
     }
 }

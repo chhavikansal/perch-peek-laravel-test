@@ -20,14 +20,14 @@ use Illuminate\Support\Facades\Route;
 $router->get(
     '/tickets/open',
     [
-        'uses' => TicketsController::class . '@openTickets',
+        'uses' => TicketsController::class . '@show',
     ]
 );
 
 $router->get(
     '/tickets/closed',
     [
-        'uses' => TicketsController::class . '@closedTickets',
+        'uses' => TicketsController::class . '@show',
     ]
 );
 

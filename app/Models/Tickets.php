@@ -4,12 +4,11 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Builder;
 
 /**
- * @method static latest()
  * @method static where(string $string, int $int)
  * @method static paginate(int $int)
+ * @method static groupBy(string $string)
  */
 class Tickets extends Model
 {
@@ -27,5 +26,6 @@ class Tickets extends Model
         'content',
         'status',
     ];
+
 
 }

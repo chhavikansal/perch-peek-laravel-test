@@ -2,30 +2,42 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Tickets;
+use App\Repositories\TicketsRepository;
 use Illuminate\Http\Response;
-use Illuminate\Support\Facades\DB;
 
-/**
- *
- */
 class TicketStatisticsController extends Controller
 {
+    /**
+     * @var TicketsRepository
+     */
+    private $ticketsRepository;
+
+    /**
+     * @param TicketsRepository $ticketsRepository
+     */
+    public function __construct(TicketsRepository $ticketsRepository)
+    {
+        $this->ticketsRepository = $ticketsRepository;
+    }
+
     /**
      * Display a listing for un-processed tickets.
      *
      */
     public function index(): Response
     {
-        $stats = [
-            "totalCount" => Tickets::all()->count(),
-            "unprocessedCount" => Tickets::where('status', 0)->count(),
-            "userName" => DB::table('tickets')->groupBy('email')
-                ->orderByRaw('count(id) DESC')->value('user_name'),
-            "lastProcessTime" => Tickets::where('status', 1)
-                ->orderBy('updated_at', 'desc')->first()->value('updated_at')
-        ];
+        $totalCount = $this->ticketsRepository->getTotalCount();
+        $totalUnprocessed = $this->ticketsRepository->getTotalCountBy('status', 0);
+        $userName = $this->ticketsRepository->getUserName();
+        $lastProcessTime = $this->ticketsRepository->lastProcessTime();
 
+        $stats = [
+            "totalCount" => $totalCount,
+            "unprocessedCount" => $totalUnprocessed,
+            "userName" => $userName,
+            "lastProcessTime" => $lastProcessTime
+        ];
+        
         return response()->view('statistics', compact('stats'));
     }
 }

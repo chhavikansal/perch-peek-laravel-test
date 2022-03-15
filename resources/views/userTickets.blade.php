@@ -11,7 +11,7 @@
 <div class="container mt-5">
     <h2>User's Tickets</h2>
 
-    @if (count($ticketsData) === 0)
+    @if (count($ticketsData['items']) === 0)
         <p> No data found</p>
     @else
         <table class="table table-bordered mb-5">
@@ -26,14 +26,14 @@
             </tr>
             </thead>
             <tbody>
-            @foreach($ticketsData as $data)
+            @foreach($ticketsData['items'] as $data)
                 <tr>
-                    <th scope="row">{{ $data->id }}</th>
-                    <td>{{ $data->user_name }}</td>
-                    <td>{{ $data->email }}</td>
-                    <td>{{ $data->subject }}</td>
-                    <td>{{ $data->status==1 ? "Processed" : "Unprocessed" }}</td>
-                    <td>{{ $data->created_at }}</td>
+                    <th scope="row">{{ $data['id'] }}</th>
+                    <td>{{ $data['user_name'] }}</td>
+                    <td>{{ $data['email'] }}</td>
+                    <td>{{ $data['subject'] }}</td>
+                    <td>{{ $data['status']==1 ? "Processed" : "Unprocessed" }}</td>
+                    <td>{{ $data['created_at'] }}</td>
                 </tr>
             @endforeach
             </tbody>
@@ -42,7 +42,13 @@
 
     {{-- Pagination --}}
     <div class="d-flex justify-content-center">
-        {!! $ticketsData->links() !!}
+        @if ($ticketsData['prevPageUrl'] !== null)
+            <a class="page-link" href="{{ $ticketsData['prevPageUrl'] }} style='margin-right:16px'">Previous</a>
+        @endif
+
+        @if ($ticketsData['nextPageUrl'] !== null)
+            <a class="page-link" href="{{ $ticketsData['nextPageUrl'] }}" >Next</a>
+        @endif
     </div>
 </div>
 </body>

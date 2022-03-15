@@ -16,8 +16,8 @@
         <tr class="table-success">
             <td>Number of Tickets</td>
             <td>Number of Un-processed Tickets</td>
-            <td>User submitted max Tickets</td>
-            <td>Last Process Ticket Time</td>
+            <td>User who submitted max Tickets</td>
+            <td>Last Processed Ticket Time</td>
         </tr>
         </thead>
         <tbody>
